@@ -5,11 +5,8 @@
 const minimist = require('minimist')
 const fs = require('fs')
 const path = require('path')
-const stream = require('stream')
-const assert = require('assert')
 const JSONStream = require('JSONStream')
 const help = fs.readFileSync(path.join(__dirname, 'help.txt'), 'utf8')
-const handleBars =
 
 function start () {
   const argv = minimist(process.argv.slice(2), {
@@ -52,7 +49,6 @@ function start () {
     stream.on('data', generateReport)
     process.stdin.pipe(stream)
   }
-
 }
 
 function generateReport (results) {
