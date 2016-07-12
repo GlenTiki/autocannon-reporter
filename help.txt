@@ -1,0 +1,12 @@
+Usage: autocannon-reporter [opts]
+
+Outputs a report at ./report.html
+
+Available options:
+
+  -i/--input FILE
+        The path to the json results. Required when not piping into this tool.
+  -v/--version
+        Print the version number.
+  -h/--help
+        Print this menu.
