@@ -5,8 +5,8 @@
 const minimist = require('minimist')
 const fs = require('fs')
 const path = require('path')
-const JSONStream = require('JSONStream')
-const Handlebars = require('handlebars')
+const concat = require('concat-stream')
+const buildReport = require('./template')
 const help = fs.readFileSync(path.join(__dirname, 'help.txt'), 'utf8')
 
 function start () {
@@ -44,29 +44,28 @@ function start () {
 
     argv.inputPath = path.isAbsolute(argv.input) ? argv.input : path.join(process.cwd(), argv.input)
     const results = require(argv.inputPath)
-    generateReport(results, (report) => { writeReport(report, argv.outputPath ()=>{}) })
-  } else {
-    const stream = JSONStream.parse()
-    stream.on('data', (results) => {
-      generateReport(results, argv.outputPath)
+    generateReport(results, (report) => {
+      writeReport(report, argv.outputPath, (err) => {
+        if (err) console.err('error writting report: ', err)
+        else console.log('report written to: ', argv.outputPath)
+      })
     })
-    process.stdin.pipe(stream)
+  } else {
+    const concatStream = concat((res) => {
+      const result = JSON.parse(res.toString())
+      generateReport(result, (report) => {
+        writeReport(report, argv.outputPath, (err) => {
+          if (err) console.err('error writting report: ', err)
+          else console.log('report written to: ', argv.outputPath)
+        })
+      })
+    })
+    process.stdin.pipe(concatStream)
   }
 }
 
 function generateReport (results, cb) {
-  console.log(results)
-  const filename = path.join(__dirname, 'template', 'index.html')
-  const template = fs.readFileSync(filename, 'utf8')
-  const partialsPath = path.join(__dirname, 'template', 'partials')
-  const partials = fs.readdirSync(partialsPath)
-  partials.forEach((partial) => {
-      Handlebars.registerPartial(Path.basename(partial, '.html'), fs.readFileSync(Path.join(partialsPath, partial), 'utf8'))
-  })
-
-  const view = Handlebars.compile(template);
-  const report = view(results)
-  cb(report)
+  cb(buildReport(results))
 }
 
 function writeReport (report, path, cb) {
