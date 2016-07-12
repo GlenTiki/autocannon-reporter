@@ -51,9 +51,16 @@ function start () {
   }
 }
 
-function generateReport (results) {
+function generateReport (results, cb) {
   console.log(results)
 }
+
+function writeReport (report, path) {
+
+}
+
+module.exports.generateReport = generateReport
+module.exports.writeReport = writeReport
 
 if (require.main === module) {
   start()
