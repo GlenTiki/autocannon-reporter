@@ -14,6 +14,7 @@ module.exports = function (results) {
       <title>Autocannon report</title>
       ${scripts(results)}
       ${css(results)}
+      <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     </head>
     <body>
       ${report(results)}
