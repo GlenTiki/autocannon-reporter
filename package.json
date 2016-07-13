@@ -37,6 +37,9 @@
   ],
   "dependencies": {
     "concat-stream": "^1.5.1",
-    "minimist": "^1.2.0"
+    "hyperscript": "^1.4.7",
+    "hyperx": "^2.0.4",
+    "minimist": "^1.2.0",
+    "pretty-bytes": "^3.0.1"
   }
 }
