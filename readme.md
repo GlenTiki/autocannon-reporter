@@ -86,6 +86,7 @@ Returns a string of html representing the results
 
 ## Todo
 
+- [ ] TESTS
 - [ ] Pretty styling
 - [ ] Generate pretty html for throughput and latency (use chartist?)
 - [ ] Generate charts for throughput and latency
