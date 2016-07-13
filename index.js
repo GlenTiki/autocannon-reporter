@@ -63,7 +63,6 @@ function start () {
 }
 
 function writeReport (report, path, cb) {
-  console.log(report)
   fs.writeFile(path, report, cb)
 }
 
