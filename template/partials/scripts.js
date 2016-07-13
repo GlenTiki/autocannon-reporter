@@ -1,9 +1,6 @@
-const h = require('hyperscript')
-const hyperx = require('hyperx')
+'use strict'
 
-module.exports = function (results) {
-  const hx = hyperx(h)
-
+module.exports = function (results, hx) {
   // put any clientside interactivity scripts between script tags
   // if minified libs needed, read them sync and put the buffer.toString
   // in there

@@ -1,9 +1,6 @@
-const h = require('hyperscript')
-const hyperx = require('hyperx')
+'use strict'
 
-module.exports = function (results) {
-  const hx = hyperx(h)
-
+module.exports = function (results, hx) {
   // put any css needed between style tags
   return hx`
   <style>

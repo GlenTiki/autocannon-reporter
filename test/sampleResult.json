@@ -1,0 +1,42 @@
+{
+  "requests": {
+    "average": 16928.37,
+    "stddev": 1245.04,
+    "min": 13024,
+    "max": 17583,
+    "total": 186217
+  },
+  "latency": {
+    "average": 0.08,
+    "stddev": 0.32,
+    "min": 0,
+    "max": 14,
+    "p50": 0,
+    "p75": 0,
+    "p90": 0,
+    "p99": 1,
+    "p999": 2,
+    "p9999": 10,
+    "p99999": 14
+  },
+  "throughput": {
+    "average": 1885649.46,
+    "stddev": 131342.54,
+    "min": 1441792,
+    "max": 1966079,
+    "total": 20670087
+  },
+  "errors": 0,
+  "timeouts": 0,
+  "duration": 11,
+  "start": "2016-07-13T11:42:15.629Z",
+  "finish": "2016-07-13T11:42:26.657Z",
+  "connections": 10,
+  "pipelining": 1,
+  "non2xx": 0,
+  "1xx": 0,
+  "2xx": 186217,
+  "3xx": 0,
+  "4xx": 0,
+  "5xx": 0
+}

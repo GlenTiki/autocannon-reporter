@@ -1,10 +1,7 @@
-const h = require('hyperscript')
-const hyperx = require('hyperx')
+'use strict'
 const prettyBytes = require('pretty-bytes')
 
-module.exports = function (results) {
-  const hx = hyperx(h)
-
+module.exports = function (results, hx) {
   return hx`
   <div class='report'>
     ${results.title ? hx`<h1>Results for ${results.title}</h1>` : hx`<h1>Autocannon results</h1>`}
