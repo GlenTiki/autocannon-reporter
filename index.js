@@ -44,35 +44,29 @@ function start () {
 
     argv.inputPath = path.isAbsolute(argv.input) ? argv.input : path.join(process.cwd(), argv.input)
     const results = require(argv.inputPath)
-    generateReport(results, (report) => {
-      writeReport(report, argv.outputPath, (err) => {
-        if (err) console.err('error writting report: ', err)
-        else console.log('report written to: ', argv.outputPath)
-      })
+    const report = buildReport(results)
+    writeReport(report, argv.outputPath, (err) => {
+      if (err) console.err('error writting report: ', err)
+      else console.log('report written to: ', argv.outputPath)
     })
   } else {
     const concatStream = concat((res) => {
-      const result = JSON.parse(res.toString())
-      generateReport(result, (report) => {
-        writeReport(report, argv.outputPath, (err) => {
-          if (err) console.err('error writting report: ', err)
-          else console.log('report written to: ', argv.outputPath)
-        })
+      const results = JSON.parse(res.toString())
+      const report = buildReport(results)
+      writeReport(report, argv.outputPath, (err) => {
+        if (err) console.err('error writting report: ', err)
+        else console.log('report written to: ', argv.outputPath)
       })
     })
     process.stdin.pipe(concatStream)
   }
 }
 
-function generateReport (results, cb) {
-  cb(buildReport(results))
-}
-
 function writeReport (report, path, cb) {
   fs.writeFile(path, report, cb)
 }
 
-module.exports.generateReport = generateReport
+module.exports.buildReport = buildReport
 module.exports.writeReport = writeReport
 
 if (require.main === module) {
