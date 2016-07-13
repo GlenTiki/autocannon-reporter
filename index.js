@@ -46,16 +46,16 @@ function start () {
     const results = require(argv.inputPath)
     const report = buildReport(results)
     writeReport(report, argv.outputPath, (err) => {
-      if (err) console.err('error writting report: ', err)
-      else console.log('report written to: ', argv.outputPath)
+      if (err) console.err('Error writting report: ', err)
+      else console.log('Report written to: ', argv.outputPath)
     })
   } else {
     const concatStream = concat((res) => {
       const results = JSON.parse(res.toString())
       const report = buildReport(results)
       writeReport(report, argv.outputPath, (err) => {
-        if (err) console.err('error writting report: ', err)
-        else console.log('report written to: ', argv.outputPath)
+        if (err) console.err('Error writting report: ', err)
+        else console.log('Report written to: ', argv.outputPath)
       })
     })
     process.stdin.pipe(concatStream)

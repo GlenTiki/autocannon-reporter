@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "A tool for creating html reports for autocannon",
   "main": "index.js",
+  "bin": {
+    "autocannon-reporter": "index.js"
+  },
   "engines": {
     "node": ">=4.0.0"
   },

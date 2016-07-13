@@ -17,12 +17,10 @@ module.exports = function (results) {
         </tr>
         ${
           Object.keys(results.latency).map((key) => {
-            return hx`
-            <tr>
+            return hx`<tr>
               <td>${key}</td>
               <td>${results.latency[key]}</td>
-            </tr>
-            `
+            </tr>`
           })
         }
       </table>
@@ -36,12 +34,10 @@ module.exports = function (results) {
         </tr>
         ${
           Object.keys(results.throughput).map((key) => {
-            return hx`
-            <tr>
+            return hx`<tr>
               <td>${key}</td>
               <td>${prettyBytes(results.throughput[key])}</td>
-            </tr>
-            `
+            </tr>`
           })
         }
       </table>
