@@ -36,6 +36,7 @@ function start () {
   }
 
   if (process.stdin.isTTY) {
+    console.log('here 1')
     if (!argv.input) {
       console.error('input (-i) is required when not piping into this')
       console.error(help)
@@ -50,6 +51,7 @@ function start () {
       else console.log('Report written to: ', argv.outputPath)
     })
   } else {
+    console.log('here 2')
     const concatStream = concat((res) => {
       const results = JSON.parse(res.toString())
       const report = buildReport(results)
