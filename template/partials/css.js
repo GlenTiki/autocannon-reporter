@@ -8,6 +8,16 @@ module.exports = function (results, hx) {
       font-family: 'Roboto', sans-serif;
       background: #c8edff;
     }
+    .title{
+      padding: 30px;
+      border: 1px solid black;
+    }
+    .heading{
+      border: 1px solid black;
+    }
+    .content{
+      border: 1px solid #888;
+    }
     .report {
       display: -webkit-box;
       display: -moz-box;
@@ -15,22 +25,22 @@ module.exports = function (results, hx) {
       display: -webkit-flex;
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
       align-items: stretch;
-      align-content: space-around
+      align-content: space-around;
 
     }
     .object {
       background: #66cafc;
-      margin: 0 0 3% 0;
-      padding: 0% 10% 1% 5%;
+      margin: 0 0 15px 0;
+      padding: 0% 0% 1% 0%;
+      border: 1px solid black;
     }
     .table {
       display: flex;
       flex-direction: column;
       background: #2C3E50;
       color: #ddd;
-
+      border: 1px solid black;
     }
 
   </style>
