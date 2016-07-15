@@ -6,19 +6,35 @@ module.exports = function (results, hx) {
   <style>
     body {
       font-family: 'Roboto', sans-serif;
-      background: #c8edff;
+      background: white;
+      margin: 0px;
+    }
+    .object {
+      margin: 0 0 15px 0;
     }
     .title{
-      padding: 30px;
-      border: 1px solid black;
+      background: #1C8DC6;
+      padding: 10px 30px;
+      margin: 0px 0px 15px 0px;
     }
     .heading{
       border: 1px solid black;
+      padding: 10px;
+      border-radius: 5px 5px 0px 0px;
     }
-    .content{
-      border: 1px solid #888;
+    .content {
+      border: 1px solid black;
+      padding: 10px;
+      border-radius: 0px 0px 5px 5px;
     }
-    .report {
+    .no-border {
+      border: 0px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .report{
+      margin: 0 30px;
       display: -webkit-box;
       display: -moz-box;
       display: -ms-flexbox;
@@ -29,18 +45,10 @@ module.exports = function (results, hx) {
       align-content: space-around;
 
     }
-    .object {
-      background: #66cafc;
-      margin: 0 0 15px 0;
-      padding: 0% 0% 1% 0%;
-      border: 1px solid black;
-    }
     .table {
       display: flex;
-      flex-direction: column;
-      background: #2C3E50;
-      color: #ddd;
-      border: 1px solid black;
+      flex-direction: column-reverse;
+      padding: 10px;
     }
 
   </style>
