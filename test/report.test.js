@@ -6,12 +6,17 @@ const lab = exports.lab = Lab.script()
 const prettyBytes = require('pretty-bytes')
 const autocannonReporter = require('..')
 const sampleResult = require('./sampleResult.json')
+const moment = require('moment')
 const report = autocannonReporter.buildReport(sampleResult)
 const expect = Code.expect
 
+function datestuff (date) {
+  return moment(date).format('MMMM Do YYYY, h:mm:ss a')
+}
+
 lab.test('Report output should contain a start and finish time', (done) => {
-  expect(report).to.contain(new Date(sampleResult.start).toString())
-  expect(report).to.contain(new Date(sampleResult.finish).toString())
+  expect(report).to.contain(datestuff(new Date(sampleResult.start).toString()))
+  expect(report).to.contain(datestuff(new Date(sampleResult.finish).toString()))
   done()
 })
 
