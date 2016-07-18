@@ -5,6 +5,18 @@ function datestuff (date) {
   return moment(date).format('MMMM Do YYYY, h:mm:ss a')
 }
 
+function growDiv() {
+  var growDiv = document.getElementById('grow');
+  if (growDiv.clientHeight) {
+    growDiv.style.height = 0;
+  } else {
+    var wrapper = document.querySelector('.measuringWrapper');
+    growDiv.style.height = wrapper.clientHeight + "px";
+  }
+
+  document.getElementById("more-button").value = document.getElementById("more-button").value == 'Read more' ? 'Read less' : 'Read more';
+}
+
 
 module.exports = function (results, hx) {
   return hx`
@@ -31,50 +43,55 @@ module.exports = function (results, hx) {
           <li><b>Latency average:</b> ${results.latency.average} ms</li>
         </ul>
       </div>
-    <div class='object latency'>
-      <div class='heading'>
-        <h2>Latency</h2>
+      <div class='object latency'>
+        <div class='heading' onclick="growDiv(this)">
+        <h2 class='symbol'>-</hs>
+          <h2>Latency</h2>
+        </div>
+        <div id='grow' class='content'>
+          <div class='measuringWrapper'>
+            <table class='table' style="width:100%">
+              <tr>
+                <th>Stat</th>
+                <th>Value</th>
+              </tr>
+              ${
+                Object.keys(results.latency).map((key) => {
+                  return hx`<tr>
+                    <td>${key}</td>
+                    <td>${results.latency[key]}</td>
+                  </tr>`
+                })
+              }
+            </table>
+          </div>
+        </div>
       </div>
-      <div class='content'>
-        <table class='table' style="width:100%">
-          <tr>
-            <th>Stat</th>
-            <th>Value</th>
-          </tr>
-          ${
-            Object.keys(results.latency).map((key) => {
-              return hx`<tr>
-                <td>${key}</td>
-                <td>${results.latency[key]}</td>
-              </tr>`
-            })
-          }
-        </table>
-      </div>
-    </div>
       <div class='object throughput'>
-        <div class='heading'>
+        <div class='heading' onclick="growDiv(this)">
+          <h2 class='symbol'>-</hs>
           <h2>Throughput</h2>
         </div>
-        <div class='content'>
-          <table class='table' style="width:100%">
-            <tr>
-              <th>Stat</th>
-              <th>Value</th>
-            </tr>
-            ${
-              Object.keys(results.throughput).map((key) => {
-                return hx`<tr>
-                  <td>${key}</td>
-                  <td>${prettyBytes(results.throughput[key])}</td>
-                </tr>`
-              })
-            }
-          </table>
+        <div id='grow' class='content'>
+          <div class='measuringWrapper'>
+            <table class='table' style="width:100%">
+              <tr>
+                <th>Stat</th>
+                <th>Value</th>
+              </tr>
+              ${
+                Object.keys(results.throughput).map((key) => {
+                  return hx`<tr>
+                    <td>${key}</td>
+                    <td>${prettyBytes(results.throughput[key])}</td>
+                  </tr>`
+                })
+              }
+            </table>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
   `
 }

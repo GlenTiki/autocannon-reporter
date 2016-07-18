@@ -18,6 +18,10 @@ module.exports = function (results, hx) {
       padding: 10px 30px;
       margin: 0px 0px 15px 0px;
     }
+    .symbol {
+      position: relative;
+      float: right;
+    }
     .heading{
       background: #ddd;
       border: 1px solid #333;
@@ -51,6 +55,31 @@ module.exports = function (results, hx) {
       display: flex;
       flex-direction: column-reverse;
       padding: 10px;
+    }
+
+    #more-button {
+      border-style: none;
+      background: none;
+      font: 16px Serif;
+      color: blue;
+      margin: 0 0 10px 0;
+    }
+
+    #grow input:checked {
+      color: red;
+    }
+
+    #more-button:hover {
+      color: black;
+    }
+
+    #grow {
+      -moz-transition: height .5s;
+      -ms-transition: height .5s;
+      -o-transition: height .5s;
+      -webkit-transition: height .5s;
+      transition: height .5s;
+      overflow: hidden;
     }
 
   </style>
