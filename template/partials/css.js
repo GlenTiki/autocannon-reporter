@@ -27,6 +27,7 @@ module.exports = function (results, hx) {
       border: 1px solid #333;
       padding: 0px 10px;
       border-radius: 5px 5px 0px 0px;
+      cursor:pointer;
     }
     .content {
       border: 1px solid #333;

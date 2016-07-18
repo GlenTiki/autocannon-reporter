@@ -33,7 +33,7 @@ module.exports = function (results, hx) {
       </div>
       <div class='object latency'>
         <div class='heading' onclick="growDiv(this)">
-        <h2 class='symbol'>-</hs>
+        <h2 class='symbol'>-</h2>
           <h2>Latency</h2>
         </div>
         <div class='content'>
