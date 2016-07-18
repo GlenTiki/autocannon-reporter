@@ -19,12 +19,13 @@ module.exports = function (results, hx) {
       margin: 0px 0px 15px 0px;
     }
     .heading{
-      border: 1px solid black;
-      padding: 10px;
+      background: #ddd;
+      border: 1px solid #333;
+      padding: 0px 10px;
       border-radius: 5px 5px 0px 0px;
     }
     .content {
-      border: 1px solid black;
+      border: 1px solid #333;
       padding: 10px;
       border-radius: 0px 0px 5px 5px;
     }
