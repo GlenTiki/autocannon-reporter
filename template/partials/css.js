@@ -54,10 +54,3 @@ module.exports = function (results, hx) {
   </style>
   `
 }
-/* body {
-  font-family: 'Roboto', sans-serif;
-}
-.heading{
-  margin: 20%
-}
--webkit-flex-flow: row wrap;*/
