@@ -5,18 +5,6 @@ function datestuff (date) {
   return moment(date).format('MMMM Do YYYY, h:mm:ss a')
 }
 
-function growDiv() {
-  var growDiv = document.getElementById('grow');
-  if (growDiv.clientHeight) {
-    growDiv.style.height = 0;
-  } else {
-    var wrapper = document.querySelector('.measuringWrapper');
-    growDiv.style.height = wrapper.clientHeight + "px";
-  }
-
-  document.getElementById("more-button").value = document.getElementById("more-button").value == 'Read more' ? 'Read less' : 'Read more';
-}
-
 
 module.exports = function (results, hx) {
   return hx`
@@ -48,7 +36,7 @@ module.exports = function (results, hx) {
         <h2 class='symbol'>-</hs>
           <h2>Latency</h2>
         </div>
-        <div id='grow' class='content'>
+        <div class='content'>
           <div class='measuringWrapper'>
             <table class='table' style="width:100%">
               <tr>
@@ -69,10 +57,10 @@ module.exports = function (results, hx) {
       </div>
       <div class='object throughput'>
         <div class='heading' onclick="growDiv(this)">
-          <h2 class='symbol'>-</hs>
+          <h2 class='symbol'>-</h2>
           <h2>Throughput</h2>
         </div>
-        <div id='grow' class='content'>
+        <div class='content'>
           <div class='measuringWrapper'>
             <table class='table' style="width:100%">
               <tr>

@@ -32,6 +32,12 @@ module.exports = function (results, hx) {
       border: 1px solid #333;
       padding: 10px;
       border-radius: 0px 0px 5px 5px;
+      -moz-transition: height .5s;
+      -ms-transition: height .5s;
+      -o-transition: height .5s;
+      -webkit-transition: height .5s;
+      transition: height .5s;
+      overflow: hidden;
     }
     .no-border {
       border: 0px;
@@ -55,31 +61,6 @@ module.exports = function (results, hx) {
       display: flex;
       flex-direction: column-reverse;
       padding: 10px;
-    }
-
-    #more-button {
-      border-style: none;
-      background: none;
-      font: 16px Serif;
-      color: blue;
-      margin: 0 0 10px 0;
-    }
-
-    #grow input:checked {
-      color: red;
-    }
-
-    #more-button:hover {
-      color: black;
-    }
-
-    #grow {
-      -moz-transition: height .5s;
-      -ms-transition: height .5s;
-      -o-transition: height .5s;
-      -webkit-transition: height .5s;
-      transition: height .5s;
-      overflow: hidden;
     }
 
   </style>

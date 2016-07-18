@@ -10,7 +10,6 @@ module.exports = function (results, hx) {
     var header = e
     var objectContainer = header.parentElement
     var symbol = objectContainer.getElementsByClassName("symbol")[0]
-    console.log(symbol)
     var content = objectContainer.getElementsByClassName("content")[0]
     if (content.clientHeight !== 20) {
       content.style.height = 0;
@@ -25,5 +24,3 @@ module.exports = function (results, hx) {
   </script>
   `
 }
-// document.getElementById("more-button").value = document.getElementById("more-button").value == 'Read more' ? 'Read less' : 'Read more';
-// var growDiv = document.getElementById('grow');
