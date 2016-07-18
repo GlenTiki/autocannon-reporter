@@ -13,7 +13,8 @@ module.exports = function (results, hx) {
       margin: 0 0 15px 0;
     }
     .title{
-      background: #1C8DC6;
+      background: #2C3E50;
+      color: white;
       padding: 10px 30px;
       margin: 0px 0px 15px 0px;
     }
