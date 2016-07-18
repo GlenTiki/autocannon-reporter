@@ -1,17 +1,10 @@
 'use strict'
 const prettyBytes = require('pretty-bytes')
-var moment = require('moment')
+const moment = require('moment')
 function datestuff (date) {
   return moment(date).format('MMMM Do YYYY, h:mm:ss a')
 }
 
-function diff (finish, start) {
-  var finishTime = new Date(finish)
-  var startTime = new Date(start)
-  var difference = finishTime.getTime() - startTime.getTime()
-  difference = Math.floor(difference / 1000)
-  return difference
-}
 
 module.exports = function (results, hx) {
   return hx`
@@ -33,7 +26,7 @@ module.exports = function (results, hx) {
           <li><b>Requests Average:</b> ${results.requests.average} reqs/sec</li>
         </ul>
         <ul class='grid'>
-          <li><b>Duration:</b> ${diff(results.finish, results.start) + ' sec(s)'}</li>
+          <li><b>Duration:</b> ${results.duration + ' sec(s)'}</li>
           <li><b>Errors:</b> ${results.errors}</li>
           <li><b>Latency average:</b> ${results.latency.average} ms</li>
         </ul>
