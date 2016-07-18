@@ -6,22 +6,12 @@ const lab = exports.lab = Lab.script()
 const prettyBytes = require('pretty-bytes')
 const autocannonReporter = require('..')
 const sampleResult = require('./sampleResult.json')
+const moment = require('moment')
 const report = autocannonReporter.buildReport(sampleResult)
 const expect = Code.expect
-function minTwoDigits (n) {
-  return (n < 10 ? '0' : '') + n
-}
 
 function datestuff (date) {
-  date = new Date(date)
-  /* date.getMonth() + ' ' + date.getDate() + ', ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
-*/
-  var temp1 = date.toDateString().substring(4)
-  var temp2 = temp1.substring(0, temp1.length - 4)
-  temp2 = temp2.trim()
-  var temp3 = temp2 + ', ' + minTwoDigits(date.getHours()) + ':' + minTwoDigits(date.getMinutes()) + ':' + minTwoDigits(date.getSeconds())
-  var ret = temp3
-  return ret
+  return moment(date).format('MMMM Do YYYY, h:mm:ss a')
 }
 
 lab.test('Report output should contain a start and finish time', (done) => {
