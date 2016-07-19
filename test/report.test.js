@@ -6,8 +6,10 @@ const lab = exports.lab = Lab.script()
 const prettyBytes = require('pretty-bytes')
 const autocannonReporter = require('..')
 const sampleResult = require('./sampleResult.json')
+const warningSample = require('./warningSample.json')
 const moment = require('moment')
 const report = autocannonReporter.buildReport(sampleResult)
+const warningReport = autocannonReporter.buildReport(warningSample)
 const expect = Code.expect
 
 function datestuff (date) {
@@ -17,6 +19,11 @@ function datestuff (date) {
 lab.test('Report output should contain a start and finish time', (done) => {
   expect(report).to.contain(datestuff(new Date(sampleResult.start).toString()))
   expect(report).to.contain(datestuff(new Date(sampleResult.finish).toString()))
+  done()
+})
+
+lab.test('Report output should contain warning', (done) => {
+  expect(warningReport).to.contain('No graphs to display because of failed autocannon run (0 responses received)')
   done()
 })
 

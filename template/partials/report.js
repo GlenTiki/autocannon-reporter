@@ -34,15 +34,23 @@ module.exports = function (results) {
           <li><b>Latency average:</b> ${results.latency.average} ms</li>
         </ul>
       </div>
-      ${results['2xx'] + results.non2xx > 0 ? pie(results, hx) : ''}
-      ${results['2xx'] + results.non2xx > 0 ? panel1(results, hx) : panelWarn(results, hx)}
-      ${results['2xx'] + results.non2xx > 0 ? panel2(results, hx) : ''}
+      ${results['2xx'] + results.non2xx > 0 ? panels(results, hx) : warnPanel(results, hx)}
     </div>
   </div>
   `
 }
 
-function panel1 (results, hx) {
+function panels (results, hx) {
+  return hx`
+  <div class='panels'>
+  ${responsePiePanel(results, hx)}
+  ${latencyTablePanel(results, hx)}
+  ${throughputTablePanel(results, hx)}
+  </div>
+  `
+}
+
+function latencyTablePanel (results, hx) {
   return hx`
   <div class='object latency'>
     <div class='heading' onclick="growDiv(this)">
@@ -71,7 +79,7 @@ function panel1 (results, hx) {
   `
 }
 
-function panel2 (results, hx) {
+function throughputTablePanel (results, hx) {
   return hx`
   <div class='object throughput'>
     <div class='heading' onclick="growDiv(this)">
@@ -100,9 +108,9 @@ function panel2 (results, hx) {
   `
 }
 
-function panelWarn (results, hx) {
+function warnPanel (results, hx) {
   return hx`
-  <div class='object throughput'>
+  <div class='object'>
     <div class='heading' onclick="growDiv(this)">
       <h2 class='symbol'>-</h2>
         <h2>Warning</h2>
@@ -116,9 +124,9 @@ function panelWarn (results, hx) {
   `
 }
 
-function pie (results, hx) {
+function responsePiePanel (results, hx) {
   return hx `
-  <div class='object throughput'>
+  <div class='object reponsePie'>
     <div class='heading' onclick="growDiv(this)">
       <h2 class='symbol'>-</h2>
         <h2>Response Types Piechart</h2>

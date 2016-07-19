@@ -35,13 +35,11 @@ function main (chartist, results) {
   ]
   labels.forEach(function (label) {
     if (results[label] !== 0) {
-      console.log(label)
       nonZeros.push(label)
     }
   })
   nonZeros.forEach(function (value) {
     seriesValues.push(results[value])
-    console.log(seriesValues)
   })
   chartist.Pie('.ct-chart', {
     labels: nonZeros,
