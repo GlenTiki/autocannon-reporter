@@ -1,6 +1,6 @@
 {
   "name": "autocannon-reporter",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A tool for creating html reports for autocannon",
   "main": "index.js",
   "bin": {
