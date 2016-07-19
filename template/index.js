@@ -1,32 +1,39 @@
 'use strict'
-const h = require('hyperscript')
-const hyperx = require('hyperx')
 const fs = require('fs')
 const path = require('path')
 const scripts = require('./partials/scripts')
-const css = require('./partials/css')
 const report = require('./partials/report')
+const css = fs.readFileSync(path.join(__dirname, './partials/main.css'))
 const flexboxgrid = fs.readFileSync(path.join(__dirname, './deps/flexboxgrid.min.css'))
+const chartistStyle = fs.readFileSync(path.join(__dirname, './deps/chartist.min.css'))
+const chartistScript = fs.readFileSync(path.join(__dirname, './deps/chartist.min.js'))
 
 module.exports = function (results) {
-  const hx = hyperx(h)
-  const tree = hx`
+  const bodyTree = report(results)
+
+  const fullBody = `
   <!doctype html>
   <html>
     <head>
       <title>Autocannon report</title>
       <style>
         ${flexboxgrid.toString()}
+        ${chartistStyle.toString()}
+        ${css.toString()}
       </style>
-      ${scripts(results, hx)}
-      ${css(results, hx)}
       <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     </head>
     <body>
-      ${report(results, hx)}
+      ${bodyTree.outerHTML}
+      <script>
+        ${chartistScript.toString()}
+      </script>
+      <script>
+        ${scripts(results)}
+      </script>
     </body>
   </html>
   `
 
-  return tree.outerHTML
+  return fullBody
 }
