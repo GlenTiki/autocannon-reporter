@@ -1,6 +1,5 @@
 'use strict'
 
-
 module.exports = function (results) {
   return `
     var results = ${JSON.stringify(results)}
@@ -45,6 +44,22 @@ function main (chartist, results) {
     labels: nonZeros,
     series: seriesValues
   }, options, responsiveOptions)
+  var lineOptions = {
+    fullWidth: true,
+    height: 450,
+    axisY: {
+      labelInterpolationFnc: function (value) {
+        return (value) + 'ms'
+      }
+    }
+  }
+  var lineValues = [results.latency.min, results.latency.average,
+    results.latency.p50, results.latency.p75,
+     results.latency.p90, results.latency.p99, results.latency.p999, results.latency.p9999, results.latency.p99999]
+  chartist.Bar('.ct-bar', {
+    labels: ['min', 'average', 'p50', 'p75', 'p90', 'p99', 'p999', 'p9999', 'p99999'],
+    series: [lineValues]
+  }, lineOptions)
 }
 
 function growDiv (e) {
