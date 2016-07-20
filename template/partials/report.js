@@ -43,6 +43,7 @@ module.exports = function (results) {
 function panels (results, hx) {
   return hx`
   <div class='panels'>
+  ${responseBarPanel(results, hx)}
   ${responsePiePanel(results, hx)}
   ${latencyTablePanel(results, hx)}
   ${throughputTablePanel(results, hx)}
@@ -134,6 +135,21 @@ function responsePiePanel (results, hx) {
     <div class='content graph'>
       <div class='measuringWrapper'>
         <div class="ct-chart ct-perfect-fourth"></div>
+      </div>
+    </div>
+  </div>
+  `
+}
+function responseBarPanel (results, hx) {
+  return hx `
+  <div class='object reponseBar'>
+    <div class='heading' onclick="growDiv(this)">
+      <h2 class='symbol'>-</h2>
+        <h2>Response Types Histogram</h2>
+    </div>
+    <div class='content graph'>
+      <div class='measuringWrapper'>
+        <div class="ct-bar"></div>
       </div>
     </div>
   </div>

@@ -1,5 +1,7 @@
 'use strict'
-
+const fs = require('fs')
+const path = require('path')
+const ctAxisTitle = fs.readFileSync(path.join(__dirname, '../deps/chartist-plugin-axistitle.min.js'))
 
 module.exports = function (results) {
   return `
@@ -45,7 +47,26 @@ function main (chartist, results) {
     labels: nonZeros,
     series: seriesValues
   }, options, responsiveOptions)
+  console.log(chartist)
+  var lineOptions = {
+    fullWidth: true,
+    height: 450,
+    axisY: {
+     labelInterpolationFnc: function(value) {
+       return (value) + 'ms';
+     }
+   }
+  }
+  var lineValues = [results.latency.min, results.latency.average,
+    results.latency.p50, results.latency.p75,
+     results.latency.p90, results.latency.p99, results.latency.p999, results.latency.p9999, results.latency.p99999]
+  chartist.Bar('.ct-bar', {
+    labels: ['min','average','p50','p75','p90','p99','p999','p9999','p99999'],
+    series: [lineValues]
+  }, lineOptions)
+  console.log(lineValues)
 }
+
 
 function growDiv (e) {
   var header = e

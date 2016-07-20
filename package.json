@@ -39,6 +39,7 @@
     "test"
   ],
   "dependencies": {
+    "chartist-plugin-axistitle": "0.0.1",
     "concat-stream": "^1.5.1",
     "flexboxgrid": "^6.3.0",
     "hyperscript": "^1.4.7",
