@@ -8,8 +8,17 @@ const flexboxgrid = fs.readFileSync(path.join(__dirname, './deps/flexboxgrid.min
 const chartistStyle = fs.readFileSync(path.join(__dirname, './deps/chartist.min.css'))
 const chartistScript = fs.readFileSync(path.join(__dirname, './deps/chartist.min.js'))
 
-module.exports = function (results) {
-  const bodyTree = report(results)
+module.exports = function (results, compare) {
+  var bodyTree = null
+  if (compare === undefined) {
+    bodyTree = report(results)
+  } else {
+    if (compare.constructor === Array) {
+      bodyTree = report(results, compare)
+    } else {
+      bodyTree = report(results)
+    }
+  }
 
   const fullBody = `
   <!doctype html>
@@ -29,7 +38,7 @@ module.exports = function (results) {
         ${chartistScript.toString()}
       </script>
       <script>
-        ${scripts(results)}
+        ${scripts(results, compare)}
       </script>
     </body>
   </html>
