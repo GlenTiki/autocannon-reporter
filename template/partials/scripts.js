@@ -191,8 +191,7 @@ function growDiv (e) {
 }
 
 function prettyBytes (num) {
-  var numberIsNan = Number.isNaN(Number(num))
-  if (typeof num !== 'number' || numberIsNan(num)) {
+  if (typeof num !== 'number' || Number.isNaN(Number(num))) {
     throw new TypeError('Expected a number, got ' + typeof num)
   }
 
