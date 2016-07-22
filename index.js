@@ -8,6 +8,7 @@ const path = require('path')
 const buildReport = require('./template')
 const help = fs.readFileSync(path.join(__dirname, 'help.txt'), 'utf8')
 const ndjson = require('ndjson')
+const steed = require('steed')
 
 function start () {
   const argv = minimist(process.argv.slice(2), {
@@ -48,14 +49,13 @@ function start () {
     }
 
     argv.inputPath = path.isAbsolute(argv.input) ? argv.input : path.join(process.cwd(), argv.input)
-    var compare = []
     if (argv.compare) {
       steed.map(argv.compare, (val, cb) => {
         val = path.isAbsolute(val) ? val : path.join(process.cwd(), val)
         fs.access(val, fs.F_OK, function (err) {
           if (err) return cb(new Error('Can\'t access ' + val))
           cb(null, require(val))
-        }
+        })
       }, (err, compare) => {
         if (err) return console.log(err)
         compare = sort(compare)
@@ -66,6 +66,7 @@ function start () {
           else console.log('Report written to: ', argv.outputPath)
         })
       })
+    }
   } else {
     let compare = []
     process.stdin
