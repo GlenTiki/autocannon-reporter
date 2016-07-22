@@ -10,14 +10,11 @@ const chartistScript = fs.readFileSync(path.join(__dirname, './deps/chartist.min
 
 module.exports = function (results, compare) {
   if (compare && compare.length > 0) {
-    compare.forEach(function (val) {
-      if (val.start === results.start && val.finish === results.finish) {
-        var index = compare.indexOf(val)
-        if (index > -1) {
-          compare.splice(index, 1)
-        }
+    for (let i = compare.length; i >= 0; i--) {
+      if (compare[i].start === results.start && compare[i].finish === results.finish) {
+        compare.splice(i, 1)
       }
-    })
+    }
   }
   const bodyTree = report(results, compare)
 
