@@ -10,9 +10,9 @@ const chartistScript = fs.readFileSync(path.join(__dirname, './deps/chartist.min
 
 module.exports = function (results, compare) {
   if (compare && compare.length > 0) {
-    for (let i = compare.length; i >= 0; i--) {
-      if (compare[i].start === results.start && compare[i].finish === results.finish) {
-        compare.splice(i, 1)
+    for (let i = compare.length; i > 0; i--) {
+      if (compare[i - 1].start === results.start && compare[i - 1].finish === results.finish) {
+        compare.splice(i - 1, 1)
       }
     }
   }
