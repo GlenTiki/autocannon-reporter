@@ -52,24 +52,23 @@ function start () {
     }
 
     argv.inputPath = path.isAbsolute(argv.input) ? argv.input : path.join(process.cwd(), argv.input)
-    if (argv.compare) {
-      steed.map(argv.compare, (val, cb) => {
-        val = path.isAbsolute(val) ? val : path.join(process.cwd(), val)
-        fs.access(val, fs.F_OK, function (err) {
-          if (err) return cb(new Error('Can\'t access ' + val))
-          cb(null, require(val))
-        })
-      }, (err, compare) => {
-        if (err) return console.log(err)
-        compare = sort(compare)
-        const results = require(argv.inputPath)
-        const report = buildReport(results, compare)
-        writeReport(report, argv.outputPath, (err) => {
-          if (err) console.err('Error writting report: ', err)
-          else console.log('Report written to: ', argv.outputPath)
-        })
+    argv.compare = argv.compare || []
+    steed.map(argv.compare, (val, cb) => {
+      val = path.isAbsolute(val) ? val : path.join(process.cwd(), val)
+      fs.access(val, fs.F_OK, function (err) {
+        if (err) return cb(new Error('Can\'t access ' + val))
+        cb(null, require(val))
       })
-    }
+    }, (err, compare) => {
+      if (err) return console.log(err)
+      compare = sort(compare)
+      const results = require(argv.inputPath)
+      const report = buildReport(results, compare)
+      writeReport(report, argv.outputPath, (err) => {
+        if (err) console.err('Error writting report: ', err)
+        else console.log('Report written to: ', argv.outputPath)
+      })
+    })
   } else {
     let compare = []
     process.stdin
@@ -77,7 +76,7 @@ function start () {
      .on('data', (json) => { compare.push(json) })
      .on('finish', () => {
        compare = sort(compare)
-       const report = buildReport(compare[compare.length - 1], compare)
+       const report = buildReport(compare[0], compare)
        writeReport(report, argv.outputPath, (err) => {
          if (err) console.err('Error writting report: ', err)
          else console.log('Report written to: ', argv.outputPath)
@@ -100,10 +99,10 @@ if (require.main === module) {
 function sort (array) {
   array.sort(function (a, b) {
     if (a.finish < b.finish) {
-      return -1
+      return 1
     }
     if (a.finish > b.finish) {
-      return 1
+      return -1
     }
     return 0
   })
