@@ -45,6 +45,7 @@
     "minimist": "^1.2.0",
     "moment": "^2.14.1",
     "ndjson": "^1.4.3",
-    "pretty-bytes": "^3.0.1"
+    "pretty-bytes": "^3.0.1",
+    "steed": "^1.1.3"
   }
 }

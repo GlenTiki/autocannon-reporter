@@ -50,25 +50,22 @@ function start () {
     argv.inputPath = path.isAbsolute(argv.input) ? argv.input : path.join(process.cwd(), argv.input)
     var compare = []
     if (argv.compare) {
-      argv.compare.forEach(function (val) {
+      steed.map(argv.compare, (val, cb) => {
         val = path.isAbsolute(val) ? val : path.join(process.cwd(), val)
         fs.access(val, fs.F_OK, function (err) {
-          if (!err) {
-            var json = require(val)
-            compare.push(json)
-          } else {
-            console.log('Can\'t access ' + val)
-          }
+          if (err) return cb(new Error('Can\'t access ' + val))
+          cb(null, require(val))
+        }
+      }, (err, compare) => {
+        if (err) return console.log(err)
+        compare = sort(compare)
+        const results = require(argv.inputPath)
+        const report = buildReport(results, compare)
+        writeReport(report, argv.outputPath, (err) => {
+          if (err) console.err('Error writting report: ', err)
+          else console.log('Report written to: ', argv.outputPath)
         })
       })
-      compare.sort()
-      const results = require(argv.inputPath)
-      const report = buildReport(results, compare)
-      writeReport(report, argv.outputPath, (err) => {
-        if (err) console.err('Error writting report: ', err)
-        else console.log('Report written to: ', argv.outputPath)
-      })
-    }
   } else {
     let compare = []
     process.stdin
