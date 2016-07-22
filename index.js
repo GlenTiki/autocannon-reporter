@@ -24,6 +24,9 @@ function start () {
   })
 
   if (argv.compare) {
+    if (!argv._) {
+      argv._ = []
+    }
     argv._.push(argv.compare)
     argv.compare = argv._
   }
