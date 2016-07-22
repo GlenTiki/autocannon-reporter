@@ -84,15 +84,9 @@ Returns a string of html representing the results
 * `path`: The full path to the output file/report. _Required_
 * `cb`: A function that is called on finishing writing to the file. Passed an `err` param if it failed.
 
-## Todo
+## Acknowledgements
 
-- [ ] TESTS
-- [ ] Pretty styling
-- [ ] Generate pretty html for throughput and latency (use chartist?)
-- [ ] Generate charts for throughput and latency
-- [ ] Generate a bar chart for the reponse types (1xx, 2xx, 3xx, 4xx, 5xx)
-- [ ] Pie chart, showing the amount of error, and how many of them were timeouts
-- [ ] Possibly add the ability to enter multiple results and generate multiple reports on the same page, with comparisons between them?
+Sponsored by [nearForm](http://www.nearform.com)
 
 ## License
 
