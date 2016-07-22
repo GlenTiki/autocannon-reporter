@@ -11,7 +11,7 @@ const chartistScript = fs.readFileSync(path.join(__dirname, './deps/chartist.min
 module.exports = function (results, compare) {
   if (compare && compare.length > 0) {
     compare.forEach(function (val) {
-      if (val.start == results.start && val.finish == results.finish) {
+      if (val.start === results.start && val.finish === results.finish) {
         var index = compare.indexOf(val)
         if (index > -1) {
           compare.splice(index, 1)

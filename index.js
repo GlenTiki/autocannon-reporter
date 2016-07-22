@@ -50,17 +50,16 @@ function start () {
     argv.inputPath = path.isAbsolute(argv.input) ? argv.input : path.join(process.cwd(), argv.input)
     var compare = []
     if (argv.compare) {
-        argv.compare.forEach(function (val) {
+      argv.compare.forEach(function (val) {
         val = path.isAbsolute(val) ? val : path.join(process.cwd(), val)
-        fs.access(val, fs.F_OK, function(err) {
+        fs.access(val, fs.F_OK, function (err) {
           if (!err) {
             var json = require(val)
             compare.push(json)
           } else {
-            console.log (`Can't access ` + val)
+            console.log('Can\'t access ' + val)
           }
-        });
-
+        })
       })
       compare.sort()
       const results = require(argv.inputPath)
@@ -70,7 +69,6 @@ function start () {
         else console.log('Report written to: ', argv.outputPath)
       })
     }
-
   } else {
     let compare = []
     process.stdin
@@ -78,12 +76,12 @@ function start () {
      .on('data', (json) => { compare.push(json) })
      .on('finish', () => {
        compare = sort(compare)
-        const report = buildReport(compare[compare.length-1], compare)
-        writeReport(report, argv.outputPath, (err) => {
-          if (err) console.err('Error writting report: ', err)
-          else console.log('Report written to: ', argv.outputPath)
-        })
-    })
+       const report = buildReport(compare[compare.length - 1], compare)
+       writeReport(report, argv.outputPath, (err) => {
+         if (err) console.err('Error writting report: ', err)
+         else console.log('Report written to: ', argv.outputPath)
+       })
+     })
   }
 }
 
