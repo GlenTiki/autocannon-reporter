@@ -9,16 +9,17 @@ const chartistStyle = fs.readFileSync(path.join(__dirname, './deps/chartist.min.
 const chartistScript = fs.readFileSync(path.join(__dirname, './deps/chartist.min.js'))
 
 module.exports = function (results, compare) {
-  var bodyTree = null
-  if (compare === undefined) {
-    bodyTree = report(results)
-  } else {
-    if (compare.constructor === Array) {
-      bodyTree = report(results, compare)
-    } else {
-      bodyTree = report(results)
-    }
+  if (compare && compare.length > 0) {
+    compare.forEach(function (val) {
+      if (val.start == results.start && val.finish == results.finish) {
+        var index = compare.indexOf(val)
+        if (index > -1) {
+          compare.splice(index, 1)
+        }
+      }
+    })
   }
+  const bodyTree = report(results, compare)
 
   const fullBody = `
   <!doctype html>

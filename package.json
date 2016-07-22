@@ -39,7 +39,6 @@
     "test"
   ],
   "dependencies": {
-    "concat-stream": "^1.5.1",
     "flexboxgrid": "^6.3.0",
     "hyperscript": "^1.4.7",
     "hyperx": "^2.0.4",
