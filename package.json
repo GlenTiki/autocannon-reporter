@@ -39,12 +39,13 @@
     "test"
   ],
   "dependencies": {
-    "concat-stream": "^1.5.1",
     "flexboxgrid": "^6.3.0",
     "hyperscript": "^1.4.7",
     "hyperx": "^2.0.4",
     "minimist": "^1.2.0",
     "moment": "^2.14.1",
-    "pretty-bytes": "^3.0.1"
+    "ndjson": "^1.4.3",
+    "pretty-bytes": "^3.0.1",
+    "steed": "^1.1.3"
   }
 }

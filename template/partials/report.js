@@ -8,8 +8,12 @@ function datestuff (date) {
 }
 
 
-module.exports = function (results) {
+module.exports = function (results, compare) {
   const hx = hyperx(h)
+  return reportBody(results, hx, compare)
+}
+
+function reportBody (results, hx, compare) {
   return hx`
   <div>
     <div class='title'>
@@ -34,17 +38,97 @@ module.exports = function (results) {
           <li><b>Latency average:</b> ${results.latency.average} ms</li>
         </ul>
       </div>
-      ${results['2xx'] + results.non2xx > 0 ? panels(results, hx) : warnPanel(results, hx)}
+      ${results['2xx'] + results.non2xx > 0 ? panels(results, hx, compare) : warnPanel(results, hx)}
+      ${compare && compare.length > 0 ? comparePanels(results, hx, compare) : ''}
     </div>
   </div>
   `
 }
 
-function panels (results, hx) {
+function comparePanels (results, hx, compare) {
+  return hx`
+  <div class='panels'>
+  ${requestsPanel(results, hx)}
+  ${bandwidthPanel(results, hx)}
+  ${latencyPanel(results, hx)}
+  ${errorsPanel(results, hx)}
+  </div>
+  `
+}
+
+function requestsPanel (results, hx) {
+  return hx`
+  <div class='object requestsBar'>
+    <div class='heading' onclick="growDiv(this)">
+      <h2 class='symbol'>-</h2>
+        <h2>Requests Comparison Chart</h2>
+    </div>
+    <div class='content graph'>
+      <div class='measuringWrapper'>
+        <div class="chart-request-barchart ct-perfect-fourth"></div>
+      </div>
+    </div>
+  </div>
+  `
+}
+
+function bandwidthPanel (results, hx) {
+  return hx`
+  <div class='object bandwidthBar'>
+    <div class='heading' onclick="growDiv(this)">
+      <h2 class='symbol'>-</h2>
+        <h2>Bandwidth Comparison Chart</h2>
+    </div>
+    <div class='content graph'>
+      <div class='measuringWrapper'>
+        <div class="chart-bandwidth-barchart ct-perfect-fourth"></div>
+      </div>
+    </div>
+  </div>
+  `
+}
+
+function latencyPanel (results, hx) {
+  return hx`
+  <div class='object latencyBar'>
+    <div class='heading' onclick="growDiv(this)">
+      <h2 class='symbol'>-</h2>
+        <h2>Latency Comparison Chart</h2>
+    </div>
+    <div class='content graph'>
+      <div class='measuringWrapper'>
+        <div class="chart-latency-barchart ct-perfect-fourth"></div>
+      </div>
+    </div>
+  </div>
+  `
+}
+
+function errorsPanel (results, hx) {
+  return hx`
+  <div class='object errorBar'>
+    <div class='heading' onclick="growDiv(this)">
+      <h2 class='symbol'>-</h2>
+        <h2>Error Comparison Chart</h2>
+    </div>
+    <div class='content graph'>
+      <div class='measuringWrapper'>
+        <div class='centeredText'><span class ='redText'>Red</span> = Errors, <span class='blueText'>Blue</span> = Timeouts</div>
+        <div class="chart-error-barchart ct-perfect-fourth"></div>
+      </div>
+    </div>
+  </div>
+  `
+}
+
+
+
+function panels (results, hx, compare) {
   return hx`
   <div class='panels'>
   ${responseBarPanel(results, hx)}
   ${responsePiePanel(results, hx)}
+  ${results.errors === 0 && results.timeouts === 0 ? '' : errorPiePanel(results, hx)}
   ${latencyTablePanel(results, hx)}
   ${throughputTablePanel(results, hx)}
   </div>
@@ -140,6 +224,23 @@ function responsePiePanel (results, hx) {
   </div>
   `
 }
+
+function errorPiePanel (results, hx) {
+  return hx `
+  <div class='object errorPie'>
+    <div class='heading' onclick="growDiv(this)">
+      <h2 class='symbol'>-</h2>
+        <h2>Error Piechart</h2>
+    </div>
+    <div class='content graph'>
+      <div class='measuringWrapper'>
+        <div class="ct-error-pie ct-perfect-fourth"></div>
+      </div>
+    </div>
+  </div>
+  `
+}
+
 function responseBarPanel (results, hx) {
   return hx `
   <div class='object reponseBar'>

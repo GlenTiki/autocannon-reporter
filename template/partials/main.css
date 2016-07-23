@@ -63,3 +63,15 @@ h3 {
 .graph {
   max-height: 500px;
 }
+ .chart-error-barchart .ct-series-a .ct-bar{
+  stroke: blue;
+}
+.centeredText {
+  text-align:center;
+}
+.redText {
+  color: red;
+}
+.blueText {
+  color: blue;
+}
