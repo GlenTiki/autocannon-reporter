@@ -57,9 +57,6 @@ body {
   flex-direction: column-reverse;
   padding: 10px;
 }
-h3 {
-  color: red;
-}
 .graph {
   max-height: 500px;
 }

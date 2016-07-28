@@ -1,4 +1,8 @@
+![banner](autocannon-banner.png)
+
 # Autocannon-reporter
+
+[![Build Status](https://travis-ci.org/thekemkid/autocannon-reporter.svg?branch=master)](https://travis-ci.org/thekemkid/autocannon-reporter)
 
 A simple html reporter for autocannon.
 
@@ -63,6 +67,8 @@ Available options:
 
   -i/--input FILE
         The path to the json results. Required when not piping into this tool.
+  -c/--compare FILES
+        Paths to json files to build comparison reports from
   -v/--version
         Print the version number.
   -h/--help
@@ -71,11 +77,12 @@ Available options:
 
 ### Programatically
 
-#### buildReport(result)
+#### buildReport(result, compare)
 
 * `result`: The result of an autocannon run. `Object`. _Required_
+* `compare`: An array of old autocannon results to compare against. `Array`.  _optional_
 
-Returns a string of html representing the results
+Returns a string of html representing the results and comparison
 
 
 #### writeReport(report, path[, cb])

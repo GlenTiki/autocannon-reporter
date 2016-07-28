@@ -15,26 +15,16 @@ function start () {
     boolean: ['help'],
     alias: {
       input: 'i',
+      compare: 'c',
       version: 'v',
-      help: 'h',
-      compare: 'c'
+      help: 'h'
     },
     default: {
     }
   })
 
-  if (argv.compare) {
-    if (!argv._) {
-      argv._ = []
-    }
-    argv._.push(argv.compare)
-    argv.compare = argv._
-  }
-  argv.outputPath = path.join(process.cwd(), 'report.html')
-  argv.outputPathFolder = path.dirname(argv.outputPath)
-
   if (argv.version) {
-    console.log('autocannon', 'v' + require('./package').version)
+    console.log('autocannon-reporter', 'v' + require('./package').version)
     console.log('node', process.version)
     return
   }
@@ -43,6 +33,13 @@ function start () {
     console.error(help)
     return
   }
+
+  if (argv.compare) {
+    argv._.push(argv.compare)
+    argv.compare = argv._
+  }
+  argv.outputPath = path.join(process.cwd(), 'report.html')
+  argv.outputPathFolder = path.dirname(argv.outputPath)
 
   if (process.stdin.isTTY) {
     if (!argv.input) {
