@@ -3,6 +3,8 @@ const h = require('hyperscript')
 const hyperx = require('hyperx')
 const prettyBytes = require('pretty-bytes')
 const moment = require('moment')
+const fs = require('fs')
+const path = require('path')
 function datestuff (date) {
   return moment(date).format('MMMM Do YYYY, h:mm:ss a')
 }
@@ -16,11 +18,12 @@ module.exports = function (results, compare) {
 function reportBody (results, hx, compare) {
   return hx`
   <div>
-    <div class='title'>
-      ${results.title ? hx`<h1>Results for ${results.title}</h1>` : hx`<h1>Autocannon results</h1>`}
+    <div class='header'>
+      <img class="logo" src="data:image/png;base64,${fs.readFileSync(path.join(__dirname, '../assets/autocannon-logo.png')).toString('base64')}"/>
+      ${results.title ? hx`<h1>Results for ${results.title}</h1>` : hx`<h1>Results</h1>`}
     </div>
     <div class='report'>
-      <div class ='object content no-border'>
+      <div class ='object content no-border spaceout'>
         <ul class ='grid'>
           <li><b>Start Time:</b> ${datestuff(results.start)} </li>
           <li><b>Connections:</b> ${results.connections}</li>
@@ -47,16 +50,31 @@ function reportBody (results, hx, compare) {
 
 function panels (results, hx, compare) {
   return hx`
-  <div class='panels'>
+  <div class='standard-panels'>
   ${responseBarPanel(results, hx)}
   ${responsePiePanel(results, hx)}
   ${results.errors === 0 && results.timeouts === 0 ? '' : errorPiePanel(results, hx)}
-  ${requestsTablePanel(results, hx)}
-  ${latencyTablePanel(results, hx)}
-  ${throughputTablePanel(results, hx)}
+  ${tablesPanel(results, hx)}
   </div>
   `
 }
+
+function responseBarPanel (results, hx) {
+  return hx `
+  <div class='object responseBar'>
+    <div class='heading' onclick="growDiv(this)">
+      <h2 class='symbol'>-</h2>
+        <h2>Response Times Histogram</h2>
+    </div>
+    <div class='content graph'>
+      <div class='measuringWrapper'>
+        <div class="ct-bar"></div>
+      </div>
+    </div>
+  </div>
+  `
+}
+
 function responsePiePanel (results, hx) {
   return hx `
   <div class='object reponsePie'>
@@ -66,23 +84,7 @@ function responsePiePanel (results, hx) {
     </div>
     <div class='content graph'>
       <div class='measuringWrapper'>
-        <div class="ct-chart ct-perfect-fourth"></div>
-      </div>
-    </div>
-  </div>
-  `
-}
-
-function responseBarPanel (results, hx) {
-  return hx `
-  <div class='object reponseBar'>
-    <div class='heading' onclick="growDiv(this)">
-      <h2 class='symbol'>-</h2>
-        <h2>Response Types Histogram</h2>
-    </div>
-    <div class='content graph'>
-      <div class='measuringWrapper'>
-        <div class="ct-bar"></div>
+        <div class="ct-chart-responses ct-perfect-fourth"></div>
       </div>
     </div>
   </div>
@@ -105,91 +107,35 @@ function errorPiePanel (results, hx) {
   `
 }
 
-function requestsTablePanel (results, hx) {
+function tablesPanel (results, hx) {
   return hx`
-  <div class='object requests'>
-    <div class='heading' onclick="growDiv(this)">
-    <h2 class='symbol'>-</h2>
-      <h2>Requests</h2>
-    </div>
-    <div class='content'>
-      <div class='measuringWrapper'>
-        <table class='table' style="width:100%">
-          <tr>
-            <th>Stat</th>
-            <th>Value</th>
-          </tr>
-          ${
-            Object.keys(results.requests).map((key) => {
-              return hx`<tr>
-                <td>${key}</td>
-                <td>${results.requests[key]}</td>
-              </tr>`
-            })
-          }
-        </table>
-      </div>
-    </div>
-  </div>
-  `
-}
-
-function latencyTablePanel (results, hx) {
-  return hx`
-  <div class='object latency'>
-    <div class='heading' onclick="growDiv(this)">
-    <h2 class='symbol'>-</h2>
-      <h2>Latency</h2>
-    </div>
-    <div class='content'>
-      <div class='measuringWrapper'>
-        <table class='table' style="width:100%">
-          <tr>
-            <th>Stat</th>
-            <th>Value</th>
-          </tr>
-          ${
-            Object.keys(results.latency).map((key) => {
-              return hx`<tr>
-                <td>${key}</td>
-                <td>${results.latency[key]}</td>
-              </tr>`
-            })
-          }
-        </table>
-      </div>
-    </div>
-  </div>
-  `
-}
-
-function throughputTablePanel (results, hx) {
-  return hx`
-  <div class='object throughput'>
+  <div class='object'>
     <div class='heading' onclick="growDiv(this)">
       <h2 class='symbol'>-</h2>
-      <h2>Throughput</h2>
+      <h2>Requests, Latency and Throughput</h2>
     </div>
     <div class='content'>
-      <div class='measuringWrapper'>
-        <table class='table' style="width:100%">
-          <tr>
-            <th>Stat</th>
-            <th>Value</th>
-          </tr>
-          ${
-            Object.keys(results.throughput).map((key) => {
-              return hx`<tr>
-                <td>${key}</td>
-                <td>${prettyBytes(results.throughput[key])}</td>
-              </tr>`
-            })
-          }
-        </table>
+      <div class='measuringWrapper spaceout'>
+        ${makeTable('Requests', results.latency, key => hx`<tr><td>${key}</td><td>${results.latency[key]}</td></tr>`)}
+        ${makeTable('Latency', results.requests, key => hx`<tr><td>${key}</td><td>${results.requests[key]}</td></tr>`)}
+        ${makeTable('Throughput', results.throughput, key => hx`<tr><td>${key}</td><td>${prettyBytes(results.throughput[key])}</td></tr>`)}
       </div>
     </div>
   </div>
   `
+  function makeTable (title, obj, map) {
+    return hx`
+    <div>
+      <h3>${title}</h3>
+      <table class='table' style="width:100%">
+        <tr>
+          <th>Stat</th>
+          <th>Value</th>
+        </tr>
+        ${Object.keys(obj).map(map)}
+      </table>
+    </div>`
+  }
 }
 
 function warnPanel (results, hx) {
@@ -210,7 +156,7 @@ function warnPanel (results, hx) {
 
 function comparePanels (results, hx, compare) {
   return hx`
-  <div class='panels'>
+  <div class='compare-panels'>
   ${requestsPanel(results, hx)}
   ${bandwidthPanel(results, hx)}
   ${latencyPanel(results, hx)}

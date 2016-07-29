@@ -6,11 +6,21 @@ body {
 .object {
   margin: 0 0 15px 0;
 }
-.title{
+.logo{
+  max-height: 50px;
+  display: inline;
+}
+.header{
   background: #2C3E50;
   color: white;
   padding: 10px 30px;
   margin: 0px 0px 15px 0px;
+}
+.header h1 {
+  display: inline;
+  padding-left: 10px;
+  font-weight: bold;
+  font-size: 2.5em;
 }
 .symbol {
   position: relative;
@@ -27,20 +37,19 @@ body {
   border: 1px solid #333;
   padding: 10px;
   border-radius: 0px 0px 5px 5px;
-  -moz-transition: height .5s;
-  -ms-transition: height .5s;
-  -o-transition: height .5s;
-  -webkit-transition: height .5s;
-  transition: height .5s;
+  -moz-transition: height .5s, padding .5s;
+  -ms-transition: height .5s, padding .5s;
+  -o-transition: height .5s, padding .5s;
+  -webkit-transition: height .5s, padding .5s;
+  transition: height .5s, padding .5s;
   overflow: hidden;
 }
-.no-border {
-  border: 0px;
+.spaceout {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
-.report{
+.report {
   margin: 0 30px;
   display: -webkit-box;
   display: -moz-box;
@@ -50,17 +59,14 @@ body {
   flex-direction: column;
   align-items: stretch;
   align-content: space-around;
-
 }
-.table {
-  display: flex;
-  flex-direction: column-reverse;
-  padding: 10px;
+.no-border {
+  border: 0px;
 }
 .graph {
-  max-height: 500px;
+  max-height: 470px;
 }
- .chart-error-barchart .ct-series-a .ct-bar{
+.chart-error-barchart .ct-series-a .ct-bar{
   stroke: blue;
 }
 .centeredText {

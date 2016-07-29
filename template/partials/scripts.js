@@ -12,48 +12,27 @@ module.exports = function (results, compare) {
 }
 
 function main (chartist, results, compare) {
-  var labels = ['1xx', '2xx', '3xx', '4xx', '5xx', 'non2xx', 'timeouts']
+  var labels = ['1xx', '2xx', '3xx', '4xx', '5xx', 'timeouts']
   var nonZeros = []
   var seriesValues = []
-  var options = {
-    fullWidth: true,
-    height: 450
-  }
-  var responsiveOptions = [
-    ['screen and (min-width: 640px)', {
-      chartPadding: 30,
-      labelOffset: 110,
-      labelDirection: 'explode',
-      labelInterpolationFnc: function (value) {
-        return value
-      }
-    }],
-    ['screen and (min-width: 1024px)', {
-      labelOffset: 90,
-      chartPadding: 20
-    }]
-  ]
   labels.forEach(function (label) {
     if (results[label] !== 0) {
       nonZeros.push(label)
+      seriesValues.push(results[label])
     }
   })
-  nonZeros.forEach(function (value) {
-    seriesValues.push(results[value])
-  })
-  chartist.Pie('.ct-chart', {
-    labels: nonZeros,
-    series: seriesValues
-  }, options, responsiveOptions)
-  var lineOptions = {
+  var total = seriesValues.reduce(function (v, x) { return v + x }, 0)
+  var options = {
     fullWidth: true,
     height: 450,
-    axisY: {
-      labelInterpolationFnc: function (value) {
-        return (value) + 'ms'
-      }
+    labelInterpolationFnc: function (value) {
+      return value + ' (' + Math.round(results[value] / total * 100) + '%)'
     }
   }
+  chartist.Pie('.ct-chart-responses', {
+    labels: nonZeros,
+    series: seriesValues
+  }, options)
 
   var errorLabels = []
   var errorValues = []
@@ -69,7 +48,21 @@ function main (chartist, results, compare) {
   chartist.Pie('.ct-error-pie', {
     labels: errorLabels,
     series: errorValues
-  }, options, responsiveOptions)
+  }, {
+    fullWidth: true,
+    height: 450
+  })
+
+  var lineOptions = {
+    fullWidth: true,
+    height: 450,
+    axisY: {
+      offset: 70,
+      labelInterpolationFnc: function (value) {
+        return (value) + 'ms'
+      }
+    }
+  }
 
   var lineValues = [results.latency.min, results.latency.average,
     results.latency.p50, results.latency.p75,
@@ -78,114 +71,105 @@ function main (chartist, results, compare) {
     labels: ['min', 'average', '50%', '75%', '90%', '99%', '99.9%', '99.99%', '99.999%'],
     series: [lineValues]
   }, lineOptions)
-  if (compare) {
-    var requestOptions = {
-      fullWidth: true,
-      height: 450,
-      axisY: {
-        labelInterpolationFnc: function (value) {
-          return (value) + 'reqs/sec'
-        }
-      },
-      chartPadding: {
-        left: 45
-      },
-      low: 0
-    }
-    var compareRequestValues = []
-    var compareRequestLabels = []
-    compareRequestValues.push(results.requests.average)
-    compareRequestLabels.push(results.finish)
-    compare.forEach(function (value) {
-      compareRequestValues.push(value.requests.average)
-      compareRequestLabels.push(value.finish)
-    })
-    chartist.Line('.chart-request-linechart', {
-      labels: compareRequestLabels.reverse(),
-      series: [compareRequestValues.reverse()]
-    }, requestOptions)
 
-    var bandwidthOptions = {
-      fullWidth: true,
-      height: 450,
-      axisY: {
-        labelInterpolationFnc: function (value) {
-          return prettyBytes(value) + '/sec'
-        }
-      },
-      chartPadding: {
-        left: 30
-      },
-      low: 0
-    }
-    var compareBandwidthValues = []
-    var compareBandwidthLabels = []
-    compareBandwidthValues.push(results.requests.average)
-    compareBandwidthLabels.push(results.finish)
-    compare.forEach(function (value) {
-      compareBandwidthValues.push(value.requests.average)
-      compareBandwidthLabels.push(value.finish)
-    })
-    chartist.Line('.chart-bandwidth-linechart', {
-      labels: compareBandwidthLabels.reverse(),
-      series: [compareBandwidthValues.reverse()]
-    }, bandwidthOptions)
+  // if compare array isn't used, return early
+  if (!compare) return
 
-    var latencyOptions = {
-      fullWidth: true,
-      height: 450,
-      axisY: {
-        labelInterpolationFnc: function (value) {
-          return (Number(value).toPrecision(2) + 'ms')
-        }
-      },
-      chartPadding: {
-        left: 30
-      },
-      low: 0
-    }
-    var compareLatencyValues = []
-    var compareLatencyLabels = []
-    compareLatencyValues.push(results.latency.average)
-    compareLatencyLabels.push(results.finish)
-    compare.forEach(function (value) {
-      compareLatencyValues.push(value.latency.average)
-      compareLatencyLabels.push(value.finish)
-    })
-    chartist.Line('.chart-latency-linechart', {
-      labels: compareLatencyLabels.reverse(),
-      series: [compareLatencyValues.reverse()]
-    }, latencyOptions)
-
-    var errorOptions = {
-      stackBars: true,
-      fullWidth: true,
-      height: 450,
-      axisY: {
-        labelInterpolationFnc: function (value) {
-          return value
-        }
-      },
-      chartPadding: {
-        left: 30
+  var requestOptions = {
+    fullWidth: true,
+    height: 450,
+    axisY: {
+      offset: 100,
+      labelInterpolationFnc: function (value) {
+        return (value) + ' reqs/sec'
       }
-    }
-    var compareErrorValues = []
-    var compareErrorLabels = []
-    var compareTimeoutValues = []
-    compareErrorValues.push(results.errors)
-    compareTimeoutValues.push(results.timeouts)
-    compareErrorLabels.push(results.finish)
-    compare.forEach(function (value) {
-      compareErrorValues.push(value.errors)
-      compareTimeoutValues.push(value.timeouts)
-      compareErrorLabels.push(value.finish)
-    })
-    chartist.Bar('.chart-error-barchart', {
-      labels: compareErrorLabels.reverse(),
-      series: [compareErrorValues.reverse(), compareTimeoutValues.reverse()]
-    }, errorOptions)
+    },
+    low: 0
   }
+  var compareRequestValues = []
+  var compareRequestLabels = []
+  compareRequestValues.push(results.requests.average)
+  compareRequestLabels.push(results.finish)
+  compare.forEach(function (value) {
+    compareRequestValues.push(value.requests.average)
+    compareRequestLabels.push(value.finish)
+  })
+  chartist.Line('.chart-request-linechart', {
+    labels: compareRequestLabels.reverse(),
+    series: [compareRequestValues.reverse()]
+  }, requestOptions)
+
+  var bandwidthOptions = {
+    fullWidth: true,
+    height: 450,
+    axisY: {
+      offset: 100,
+      labelInterpolationFnc: function (value) {
+        return prettyBytes(value) + '/sec'
+      }
+    },
+    low: 0
+  }
+  var compareBandwidthValues = []
+  var compareBandwidthLabels = []
+  compareBandwidthValues.push(results.requests.average)
+  compareBandwidthLabels.push(results.finish)
+  compare.forEach(function (value) {
+    compareBandwidthValues.push(value.requests.average)
+    compareBandwidthLabels.push(value.finish)
+  })
+  chartist.Line('.chart-bandwidth-linechart', {
+    labels: compareBandwidthLabels.reverse(),
+    series: [compareBandwidthValues.reverse()]
+  }, bandwidthOptions)
+
+  var latencyOptions = {
+    fullWidth: true,
+    height: 450,
+    axisY: {
+      offset: 100,
+      labelInterpolationFnc: function (value) {
+        return (Number(value).toPrecision(2) + ' ms')
+      }
+    },
+    low: 0
+  }
+  var compareLatencyValues = []
+  var compareLatencyLabels = []
+  compareLatencyValues.push(results.latency.average)
+  compareLatencyLabels.push(results.finish)
+  compare.forEach(function (value) {
+    compareLatencyValues.push(value.latency.average)
+    compareLatencyLabels.push(value.finish)
+  })
+  chartist.Line('.chart-latency-linechart', {
+    labels: compareLatencyLabels.reverse(),
+    series: [compareLatencyValues.reverse()]
+  }, latencyOptions)
+
+  var errorOptions = {
+    stackBars: true,
+    fullWidth: true,
+    height: 450,
+    chartPadding: {
+      left: 30
+    }
+  }
+  var compareErrorValues = []
+  var compareErrorLabels = []
+  var compareTimeoutValues = []
+  compareErrorValues.push(results.errors - results.timeouts)
+  compareTimeoutValues.push(results.timeouts)
+  compareErrorLabels.push(results.finish)
+  compare.forEach(function (value) {
+    compareErrorValues.push(value.errors - value.timeouts)
+    compareTimeoutValues.push(value.timeouts)
+    compareErrorLabels.push(value.finish)
+  })
+  chartist.Bar('.chart-error-barchart', {
+    labels: compareErrorLabels.reverse(),
+    series: [compareTimeoutValues.reverse(), compareErrorValues.reverse()]
+  }, errorOptions)
 }
 
 function growDiv (e) {
@@ -193,12 +177,14 @@ function growDiv (e) {
   var objectContainer = header.parentElement
   var symbol = objectContainer.getElementsByClassName('symbol')[0]
   var content = objectContainer.getElementsByClassName('content')[0]
-  if (content.clientHeight !== 20) {
+  var wrapper = content.getElementsByClassName('measuringWrapper')[0]
+  if (content.clientHeight > 20) {
     content.style.height = 0
+    content.style.padding = '2px'
     symbol.innerText = '+'
   } else {
-    var wrapper = content.getElementsByClassName('measuringWrapper')[0]
     content.style.height = wrapper.clientHeight + 'px'
+    content.style.padding = '20px'
     symbol.innerText = '-'
   }
 }
@@ -225,5 +211,5 @@ function prettyBytes (num) {
   num = Number((num / Math.pow(1000, exponent)).toFixed(2))
   unit = units[exponent]
 
-  return (neg ? '-' : '') + num + '' + unit
+  return (neg ? '-' : '') + num + ' ' + unit
 }

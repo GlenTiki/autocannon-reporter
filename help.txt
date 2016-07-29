@@ -6,7 +6,12 @@ Available options:
 
   -i/--input FILE
         The path to the json results. Required when not piping into this tool.
+  -c/--compare FILES
+        The paths to multiple json results to be compared to the input.
   -v/--version
         Print the version number.
   -h/--help
         Print this menu.
+
+You can also pipe in ndjson results, the first will be considered the input and
+the rest are used for the comparison
