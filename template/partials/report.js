@@ -158,7 +158,6 @@ function comparePanels (results, hx, compare) {
   return hx`
   <div class='compare-panels'>
   ${requestsPanel(results, hx)}
-  ${bandwidthPanel(results, hx)}
   ${latencyPanel(results, hx)}
   ${errorsPanel(results, hx)}
   </div>
@@ -175,22 +174,6 @@ function requestsPanel (results, hx) {
     <div class='content graph'>
       <div class='measuringWrapper'>
         <div class="chart-request-linechart ct-perfect-fourth"></div>
-      </div>
-    </div>
-  </div>
-  `
-}
-
-function bandwidthPanel (results, hx) {
-  return hx`
-  <div class='object bandwidthBar'>
-    <div class='heading' onclick="growDiv(this)">
-      <h2 class='symbol'>-</h2>
-        <h2>Bandwidth Comparison Chart</h2>
-    </div>
-    <div class='content graph'>
-      <div class='measuringWrapper'>
-        <div class="chart-bandwidth-linechart ct-perfect-fourth"></div>
       </div>
     </div>
   </div>
