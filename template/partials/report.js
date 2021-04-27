@@ -2,11 +2,11 @@
 const h = require('hyperscript')
 const hyperx = require('hyperx')
 const prettyBytes = require('pretty-bytes')
-const moment = require('moment')
 const fs = require('fs')
 const path = require('path')
+const moment = require('moment')
 function datestuff (date) {
-  return moment(date).format('MMMM Do YYYY, h:mm:ss a')
+  return moment(date).format('DD-MMM-YYYY, HH:mm:ss')
 }
 
 
@@ -23,24 +23,49 @@ function reportBody (results, hx, compare) {
       ${results.title ? hx`<h1>Results for ${results.title}</h1>` : hx`<h1>Results</h1>`}
     </div>
     <div class='report'>
-      <div class ='object content no-border spaceout'>
-        <ul class ='grid'>
-          <li><b>Start Time:</b> ${datestuff(results.start)} </li>
-          <li><b>Connections:</b> ${results.connections}</li>
-          <li><b>Timeouts:</b> ${results.timeouts}</li>
-          <li><b>Throughput average:</b> ${prettyBytes(results.throughput.average)}/sec</li>
-        </ul>
-        <ul class ='grid'>
-          <li><b>Finish Time:</b> ${datestuff(results.finish)}</li>
-          <li><b>Pipelining:</b> ${results.pipelining}</li>
-          <li><b>Requests Average:</b> ${results.requests.average} reqs/sec</li>
-        </ul>
-        <ul class='grid'>
-          <li><b>Duration:</b> ${results.duration + ' sec(s)'}</li>
-          <li><b>Errors:</b> ${results.errors}</li>
-          <li><b>Latency average:</b> ${results.latency.average} ms</li>
-        </ul>
-      </div>
+      <table>
+        <tr>
+          <th>Start time</th>
+          <th>Finish time</th>
+          <th>Duration</th>
+          <th>Connections</th>
+          <th>Pipelining</th>
+          <th>Errors</th>
+          <th>Timeouts</th>
+          <th>Requests avg.</th>
+          <th>Latency avr.</th>
+          <th>Throughput avg.</th>
+        </tr>
+        <tr>
+          <td>${datestuff(results.start)}</td>
+          <td>${datestuff(results.finish)}</td>
+          <td>${results.duration + ' sec(s)'}</td>
+          <td>${results.connections}</td>
+          <td>${results.pipelining}</td>
+          <td>${results.errors}</td>
+          <td>${results.timeouts}</td>
+          <td>${results.requests.average} reqs/sec</td>
+          <td>${results.latency.average} ms</td>
+          <td>${prettyBytes(results.throughput.average)}/sec</td>
+        </tr>
+    ${[...compare].reverse().map(function(value) {
+      return hx`
+        <tr>
+          <td>${datestuff(value.start)}</td>
+          <td>${datestuff(value.finish)}</td>
+          <td>${value.duration + ' sec(s)'}</td>
+          <td>${value.connections}</td>
+          <td>${value.pipelining}</td>
+          <td>${value.errors}</td>
+          <td>${value.timeouts}</td>
+          <td>${value.requests.average} reqs/sec</td>
+          <td>${value.latency.average} ms</td>
+          <td>${prettyBytes(value.throughput.average)}/sec</td>
+        </tr>
+      `
+    })}
+
+      </table>
       ${results['2xx'] + results.non2xx > 0 ? panels(results, hx, compare) : warnPanel(results, hx)}
       ${compare && compare.length > 0 ? comparePanels(results, hx, compare) : ''}
     </div>
@@ -80,7 +105,7 @@ function responsePiePanel (results, hx) {
   <div class='object reponsePie'>
     <div class='heading' onclick="growDiv(this)">
       <h2 class='symbol'>-</h2>
-        <h2>Response Types Piechart</h2>
+        <h2>Response Types Piechart (Overall)</h2>
     </div>
     <div class='content graph'>
       <div class='measuringWrapper'>
