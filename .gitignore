@@ -34,3 +34,4 @@ node_modules
 
 profile-*
 report.html
+package-lock.json

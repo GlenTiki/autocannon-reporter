@@ -17,11 +17,11 @@ function main (chartist, results, compare) {
   var seriesValues = []
   var compareValues = []
   var compareResults = []
-  const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  const reducer = (accumulator, currentValue) => accumulator + currentValue
   labels.forEach(function (label) {
-    compare.forEach(function(value) {compareValues.push(value[label])})
+    compare.forEach(function (value) { compareValues.push(value[label]) })
     compareResults[label] = compareValues.reduce(reducer)
-    if (results[label] !== 0 || compareResults[label] != 0) {
+    if (results[label] !== 0 || compareResults[label] !== 0) {
       nonZeros.push(label)
       compareValues = []
       seriesValues.push(compareResults[label] + results[label])
@@ -75,7 +75,6 @@ function main (chartist, results, compare) {
      results.latency.p90, results.latency.p99, results.latency.p99_9]
 
   if (compare) {
-    var compareValues = []
     compare.forEach(function (value) {
       compareValues.push([value.latency.min, value.latency.average,
          value.latency.p50, value.latency.p75,
@@ -93,7 +92,7 @@ function main (chartist, results, compare) {
       series: [lineValues]
     }, lineOptions)
       // if compare array isn't used, return early
-      return
+    return
   }
 
   var requestOptions = {

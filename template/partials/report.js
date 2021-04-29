@@ -15,7 +15,7 @@ module.exports = function (results, compare) {
   return reportBody(results, hx, compare)
 }
 
-function reportBody (results, hx, compare) {
+function reportBody (results, hx, compare = []) {
   return hx`
   <div>
     <div class='header'>
@@ -48,7 +48,7 @@ function reportBody (results, hx, compare) {
           <td>${results.latency.average} ms</td>
           <td>${prettyBytes(results.throughput.average)}/sec</td>
         </tr>
-    ${[...compare].reverse().map(function(value) {
+    ${[...compare].reverse().map(function (value) {
       return hx`
         <tr>
           <td>${datestuff(value.start)}</td>

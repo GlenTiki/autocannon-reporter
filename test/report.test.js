@@ -13,12 +13,12 @@ const warningReport = autocannonReporter.buildReport(warningSample)
 const expect = Code.expect
 
 function datestuff (date) {
-  return moment(date).format('MMMM Do YYYY, h:mm:ss a')
+  return moment(date).format('DD-MMM-YYYY, HH:mm:ss')
 }
 
 lab.test('Report output should contain a start and finish time', (done) => {
-  expect(report).to.contain(datestuff(new Date(sampleResult.start).toString()))
-  expect(report).to.contain(datestuff(new Date(sampleResult.finish).toString()))
+  expect(report).to.contain(datestuff(new Date(sampleResult.start)))
+  expect(report).to.contain(datestuff(new Date(sampleResult.finish)))
   done()
 })
 
