@@ -10,7 +10,7 @@
     "node": ">=4.0.0"
   },
   "scripts": {
-    "test": "lab --ignore Document,Node,Element,Comment,Text,document",
+    "test": "lab -l --ignore Document,Node,Element,Comment,Text,document",
     "lint": "standard"
   },
   "repository": {
