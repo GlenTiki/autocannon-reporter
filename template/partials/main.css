@@ -60,6 +60,9 @@ body {
   align-items: stretch;
   align-content: space-around;
 }
+.report th {
+  text-align: left;
+}
 .no-border {
   border: 0px;
 }
