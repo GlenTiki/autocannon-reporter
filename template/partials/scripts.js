@@ -12,6 +12,9 @@ module.exports = function (results, compare) {
 }
 
 function main (chartist, results, compare) {
+
+  // response types pie
+
   var labels = ['1xx', '2xx', '3xx', '4xx', '5xx', 'timeouts']
   var nonZeros = []
   var seriesValues = []
@@ -19,12 +22,14 @@ function main (chartist, results, compare) {
   var compareResults = []
   const reducer = (accumulator, currentValue) => accumulator + currentValue
   labels.forEach(function (label) {
-    compare.forEach(function (value) { compareValues.push(value[label]) })
-    compareResults[label] = compareValues.reduce(reducer)
+    if (compare.length) {
+      compare.forEach(function (value) { compareValues.push(value[label]) })
+      compareResults[label] = compareValues.reduce(reducer)
+    }
     if (results[label] !== 0 || compareResults[label] !== 0) {
       nonZeros.push(label)
       compareValues = []
-      seriesValues.push(compareResults[label] + results[label])
+      seriesValues.push(results[label] + (compare.length ? compareResults[label] : 0))
     }
   })
   var total = seriesValues.reduce(reducer)
@@ -40,24 +45,7 @@ function main (chartist, results, compare) {
     series: seriesValues
   }, options)
 
-  var errorLabels = []
-  var errorValues = []
-  if (results.errors !== 0) {
-    errorLabels.push('Errors (non-timeouts)')
-    errorValues.push(results.errors)
-  }
-  if (results.timeouts !== 0) {
-    errorLabels.push('Timeouts')
-    errorValues.push(results.timeouts)
-  }
-
-  chartist.Pie('.ct-error-pie', {
-    labels: errorLabels,
-    series: errorValues
-  }, {
-    fullWidth: true,
-    height: 450
-  })
+  // latency histogram
 
   var lineOptions = {
     fullWidth: true,
@@ -70,11 +58,12 @@ function main (chartist, results, compare) {
     }
   }
 
+  var compareValues = []
   var lineValues = [results.latency.min, results.latency.average,
      results.latency.p50, results.latency.p75,
      results.latency.p90, results.latency.p99, results.latency.p99_9]
 
-  if (compare) {
+  if (compare.length) {
     compare.forEach(function (value) {
       compareValues.push([value.latency.min, value.latency.average,
          value.latency.p50, value.latency.p75,
@@ -82,18 +71,97 @@ function main (chartist, results, compare) {
     })
     compareValues.push(lineValues)
 
-    chartist.Bar('.ct-bar', {
+    chartist.Bar('.ct-latency-bar', {
       labels: ['min', 'average', '50%', '75%', '90%', '99%', '99.9%'],
       series: compareValues.reverse()
     }, lineOptions)
   } else {
-    chartist.Bar('.ct-bar', {
+    chartist.Bar('.ct-latency-bar', {
       labels: ['min', 'average', '50%', '75%', '90%', '99%', '99.9%'],
       series: [lineValues]
     }, lineOptions)
-      // if compare array isn't used, return early
+  }
+
+  // request histogram 
+
+  var lineOptions = {
+    fullWidth: true,
+    height: 450,
+    axisY: {
+      offset: 70,
+      labelInterpolationFnc: function (value) {
+        return (value) + 'reqs/sec'
+      }
+    }
+  }
+
+  var compareValues = []
+  var lineValues = [results.requests.min, results.requests.average,
+     results.requests.p50, results.requests.p75,
+     results.requests.p90, results.requests.p99, results.requests.p99_9]
+
+  if (compare.length) {
+    compare.forEach(function (value) {
+      compareValues.push([value.requests.min, value.requests.average,
+         value.requests.p50, value.requests.p75,
+         value.requests.p90, value.requests.p99, value.requests.p99_9])
+    })
+    compareValues.push(lineValues)
+
+    chartist.Bar('.ct-request-bar', {
+      labels: ['min', 'average', '50%', '75%', '90%', '99%', '99.9%'],
+      series: compareValues.reverse()
+    }, lineOptions)
+  } else {
+    chartist.Bar('.ct-request-bar', {
+      labels: ['min', 'average', '50%', '75%', '90%', '99%', '99.9%'],
+      series: [lineValues]
+    }, lineOptions)
+  }
+
+  // throughput histogram 
+
+  var lineOptions = {
+    fullWidth: true,
+    height: 450,
+    axisY: {
+      offset: 70,
+      labelInterpolationFnc: function (value) {
+        return (value) + 'kB/sec'
+      }
+    }
+  }
+
+  var compareValues = []
+  var lineValues = [results.throughput.min, results.throughput.average,
+     results.throughput.p50, results.throughput.p75,
+     results.throughput.p90, results.throughput.p99, results.throughput.p99_9]
+
+  if (compare.length) {
+    compare.forEach(function (value) {
+      compareValues.push([value.throughput.min, value.throughput.average,
+         value.throughput.p50, value.throughput.p75,
+         value.throughput.p90, value.throughput.p99, value.throughput.p99_9])
+    })
+    compareValues.push(lineValues)
+
+    chartist.Bar('.ct-throughput-bar', {
+      labels: ['min', 'average', '50%', '75%', '90%', '99%', '99.9%'],
+      series: compareValues.reverse()
+    }, lineOptions)
+  } else {
+    chartist.Bar('.ct-throughput-bar', {
+      labels: ['min', 'average', '50%', '75%', '90%', '99%', '99.9%'],
+      series: [lineValues]
+    }, lineOptions)
+  }
+
+  if (!compare.length) {
+    // if compare array isn't used, return early
     return
   }
+
+  // request compare chart 
 
   var requestOptions = {
     fullWidth: true,
@@ -119,13 +187,15 @@ function main (chartist, results, compare) {
     series: [compareRequestValues.reverse()]
   }, requestOptions)
 
+  // latency compare chart
+
   var latencyOptions = {
     fullWidth: true,
     height: 450,
     axisY: {
       offset: 100,
       labelInterpolationFnc: function (value) {
-        return (Number(value).toPrecision(2) + ' ms')
+        return (value + ' ms')
       }
     },
     low: 0
@@ -142,6 +212,34 @@ function main (chartist, results, compare) {
     labels: compareLatencyLabels.reverse(),
     series: [compareLatencyValues.reverse()]
   }, latencyOptions)
+
+  // throughput compare chart
+
+  var throughputOptions = {
+    fullWidth: true,
+    height: 450,
+    axisY: {
+      offset: 100,
+      labelInterpolationFnc: function (value) {
+        return (value + ' kB/sec')
+      }
+    },
+    low: 0
+  }
+  var compareThroughputValues = []
+  var compareThroughputLabels = []
+  compare.forEach(function (value) {
+    compareThroughputValues.push(value.throughput.average)
+    compareThroughputLabels.push(value.finish)
+  })
+  compareThroughputValues.push(results.throughput.average)
+  compareThroughputLabels.push(results.finish)
+  chartist.Line('.chart-throughput-linechart', {
+    labels: compareThroughputLabels.reverse(),
+    series: [compareThroughputValues.reverse()]
+  }, throughputOptions)
+
+  // error bar chart 
 
   var errorOptions = {
     stackBars: true,

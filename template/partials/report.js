@@ -76,24 +76,57 @@ function reportBody (results, hx, compare = []) {
 function panels (results, hx, compare) {
   return hx`
   <div class='standard-panels'>
-  ${responseBarPanel(results, hx)}
+  ${requestBarPanel(results, hx)}
+  ${latencyBarPanel(results, hx)}
+  ${throughputBarPanel(results, hx)}
   ${responsePiePanel(results, hx)}
-  ${results.errors === 0 && results.timeouts === 0 ? '' : errorPiePanel(results, hx)}
-  ${tablesPanel(results, hx)}
+  ${tablesPanel(results, compare, hx)}
   </div>
   `
 }
 
-function responseBarPanel (results, hx) {
+function latencyBarPanel (results, hx) {
   return hx `
   <div class='object responseBar'>
     <div class='heading' onclick="growDiv(this)">
       <h2 class='symbol'>-</h2>
-        <h2>Response Times Histogram</h2>
+        <h2>Latency Histogram</h2>
     </div>
     <div class='content graph'>
       <div class='measuringWrapper'>
-        <div class="ct-bar"></div>
+        <div class="ct-latency-bar"></div>
+      </div>
+    </div>
+  </div>
+  `
+}
+
+function requestBarPanel (results, hx) {
+  return hx `
+  <div class='object requestBar'>
+    <div class='heading' onclick="growDiv(this)">
+      <h2 class='symbol'>-</h2>
+        <h2>Request Histogram</h2>
+    </div>
+    <div class='content graph'>
+      <div class='measuringWrapper'>
+        <div class="ct-request-bar"></div>
+      </div>
+    </div>
+  </div>
+  `
+}
+
+function throughputBarPanel (results, hx) {
+  return hx `
+  <div class='object throughputBar'>
+    <div class='heading' onclick="growDiv(this)">
+      <h2 class='symbol'>-</h2>
+        <h2>Throughpout Histogram</h2>
+    </div>
+    <div class='content graph'>
+      <div class='measuringWrapper'>
+        <div class="ct-throughput-bar"></div>
       </div>
     </div>
   </div>
@@ -116,23 +149,7 @@ function responsePiePanel (results, hx) {
   `
 }
 
-function errorPiePanel (results, hx) {
-  return hx `
-  <div class='object errorPie'>
-    <div class='heading' onclick="growDiv(this)">
-      <h2 class='symbol'>-</h2>
-        <h2>Error Piechart</h2>
-    </div>
-    <div class='content graph'>
-      <div class='measuringWrapper'>
-        <div class="ct-error-pie ct-perfect-fourth"></div>
-      </div>
-    </div>
-  </div>
-  `
-}
-
-function tablesPanel (results, hx) {
+function tablesPanel (results, compare, hx) {
   return hx`
   <div class='object'>
     <div class='heading' onclick="growDiv(this)">
@@ -141,9 +158,9 @@ function tablesPanel (results, hx) {
     </div>
     <div class='content'>
       <div class='measuringWrapper spaceout'>
-        ${makeTable('Requests', results.latency, key => hx`<tr><td>${key}</td><td>${results.latency[key]}</td></tr>`)}
-        ${makeTable('Latency', results.requests, key => hx`<tr><td>${key}</td><td>${results.requests[key]}</td></tr>`)}
-        ${makeTable('Throughput', results.throughput, key => hx`<tr><td>${key}</td><td>${prettyBytes(results.throughput[key])}</td></tr>`)}
+        ${makeTable('Requests [reqs/sec]', results.requests, key => hx`<tr><td>${key}</td><td class='value'>${toInt(results.requests[key])}</td>${addCompareRequestValues(compare, key, hx)}</tr>`)}
+        ${makeTable('Latency [ms]', results.latency, key => hx`<tr><td>${key}</td><td class='value'>${toInt(results.latency[key])}</td>${addCompareLatencyValues(compare, key, hx)}</tr>`)}
+        ${makeTable('Throughput [bytes/sec]', results.throughput, key => hx`<tr><td>${key}</td><td class='value'>${prettyBytes(results.throughput[key])}</td>${addCompareThroughputValues(compare, key, hx)}</tr>`)}
       </div>
     </div>
   </div>
@@ -161,6 +178,36 @@ function tablesPanel (results, hx) {
       </table>
     </div>`
   }
+}
+
+function addCompareRequestValues (compare, key, hx) {
+  return hx`
+    ${[...compare].reverse().map(function (value) {
+    return hx`
+      <td class='value'>${toInt(value.requests[key])}</td>
+    `
+  })}
+  `
+}
+
+function addCompareLatencyValues (compare, key, hx) {
+  return hx`
+    ${[...compare].reverse().map(function (value) {
+    return hx`
+      <td class='value'>${toInt(value.latency[key])}</td>
+    `
+  })}
+  `
+}
+
+function addCompareThroughputValues (compare, key, hx) {
+  return hx`
+    ${[...compare].reverse().map(function (value) {
+    return hx`
+      <td class='value'>${prettyBytes(value.throughput[key])}</td>
+    `
+  })}
+  `
 }
 
 function warnPanel (results, hx) {
@@ -184,6 +231,7 @@ function comparePanels (results, hx, compare) {
   <div class='compare-panels'>
   ${requestsPanel(results, hx)}
   ${latencyPanel(results, hx)}
+  ${throughputPanel(results, hx)}
   ${errorsPanel(results, hx)}
   </div>
   `
@@ -221,6 +269,22 @@ function latencyPanel (results, hx) {
   `
 }
 
+function throughputPanel (results, hx) {
+  return hx`
+  <div class='object throughputBar'>
+    <div class='heading' onclick="growDiv(this)">
+      <h2 class='symbol'>-</h2>
+        <h2>Throughput Comparison Chart</h2>
+    </div>
+    <div class='content graph'>
+      <div class='measuringWrapper'>
+        <div class="chart-throughput-linechart ct-perfect-fourth"></div>
+      </div>
+    </div>
+  </div>
+  `
+}
+
 function errorsPanel (results, hx) {
   return hx`
   <div class='object errorBar'>
@@ -236,4 +300,8 @@ function errorsPanel (results, hx) {
     </div>
   </div>
   `
+}
+
+function toInt (num) {
+  return Number.parseInt(num)
 }
