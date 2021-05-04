@@ -25,8 +25,8 @@ function reportBody (results, hx, compare = []) {
     <div class='report'>
       <table>
         <tr>
+          <th>Title</th>
           <th>Start time</th>
-          <th>Finish time</th>
           <th>Duration</th>
           <th>Connections</th>
           <th>Pipelining</th>
@@ -37,8 +37,8 @@ function reportBody (results, hx, compare = []) {
           <th>Throughput avg.</th>
         </tr>
         <tr>
+          <td>${results.title}</td>
           <td>${datestuff(results.start)}</td>
-          <td>${datestuff(results.finish)}</td>
           <td>${results.duration + ' sec(s)'}</td>
           <td>${results.connections}</td>
           <td>${results.pipelining}</td>
@@ -51,8 +51,8 @@ function reportBody (results, hx, compare = []) {
     ${[...compare].reverse().map(function (value) {
       return hx`
         <tr>
+          <td>${value.title}</td>
           <td>${datestuff(value.start)}</td>
-          <td>${datestuff(value.finish)}</td>
           <td>${value.duration + ' sec(s)'}</td>
           <td>${value.connections}</td>
           <td>${value.pipelining}</td>
