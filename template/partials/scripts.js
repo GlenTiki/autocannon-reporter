@@ -2,7 +2,7 @@
 module.exports = function (results, compare) {
   return `
     var results = ${JSON.stringify(results)}
-    var compare = ${JSON.stringify(compare)}
+    var compare = ${JSON.stringify(compare) || []}
     ${prettyBytes.toString()}
     ${growDiv.toString()}
     ${main.toString()}
