@@ -37,7 +37,7 @@ function main (chartist, results, compare) {
     fullWidth: true,
     height: 450,
     labelInterpolationFnc: function (value) {
-      return value + ' (' + Math.round((results[value] + compareResults[value]) / total * 100) + '%)'
+      return value + ' (' + Math.round(( (results[value] || 0) + (compareResults[value] || 0) ) / total * 100) + '%)'
     }
   }
   chartist.Pie('.ct-chart-responses', {
