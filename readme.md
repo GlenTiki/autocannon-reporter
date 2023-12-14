@@ -47,8 +47,8 @@ This tool can also be used programmatically
   }, (err, result) => {
     if (err) throw err
 
-    reporter.buildReport(result) // the html structure
-    reporter.writeReport(result, reportOutputPath, (err, res) => {
+    var report = reporter.buildReport(result, []) // the html structure
+    reporter.writeReport(report, reportOutputPath, (err, res) => {
       if (err) console.err('Error writting report: ', err)
       else console.log('Report written to: ', reportOutputPath)
     }) //write the report
